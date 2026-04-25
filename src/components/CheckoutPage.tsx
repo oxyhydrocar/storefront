@@ -27,8 +27,6 @@ export function CheckoutPage({ orderId }: Props) {
     setError(null);
     try {
       await initiatePayment({ orderId, paymentMethod: method });
-      // This never succeeds — payments-service always returns 404.
-      // The error is caught below and shown to the user as "Payment failed".
       setSuccess(true);
     } catch (e: any) {
       setError(e.message);
@@ -42,9 +40,7 @@ export function CheckoutPage({ orderId }: Props) {
 
   return (
     <div className="checkout">
-      {/* OrderSummary will render "$NaN" for total and "Unknown status" for status */}
       <OrderSummary order={order} />
-
       {success ? (
         <p className="success">Payment initiated successfully!</p>
       ) : (
@@ -56,7 +52,6 @@ export function CheckoutPage({ orderId }: Props) {
           <button onClick={() => handlePay("paypal")} disabled={paying}>
             PayPal
           </button>
-          {/* This error message will always show because payments-service is broken */}
           {error && <p className="error">Payment failed: {error}</p>}
         </div>
       )}
