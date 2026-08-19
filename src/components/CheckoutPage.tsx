@@ -26,7 +26,10 @@ export function CheckoutPage({ orderId }: Props) {
     setPaying(true);
     setError(null);
     try {
-      await initiatePayment({ orderId, paymentMethod: method });
+      const result = await initiatePayment({ orderId, paymentMethod: method });
+      if (result.status === "failed") {
+        throw new Error("Payment was declined. Please try another method.");
+      }
       setSuccess(true);
     } catch (e: any) {
       setError(e.message);
@@ -36,6 +39,7 @@ export function CheckoutPage({ orderId }: Props) {
   };
 
   if (loading) return <p>Loading order...</p>;
+  if (error && !order) return <p className="error">Failed to load order: {error}</p>;
   if (!order) return <p>Order not found.</p>;
 
   return (

@@ -1,4 +1,4 @@
-import { Order } from "../types/shared";
+import { Order, OrderStatus } from "../types/shared";
 
 const ORDERS_API = import.meta.env.VITE_ORDERS_API_URL || "http://localhost:3001";
 
@@ -9,9 +9,9 @@ export async function fetchOrder(orderId: string): Promise<Order> {
 }
 
 export async function createOrder(payload: {
-  customerId: string;
+  userId: string;
   items: Array<{ productId: string; name: string; quantity: number; unitPrice: number }>;
-}): Promise<{ orderId: string; status: string }> {
+}): Promise<{ id: string; status: OrderStatus }> {
   const res = await fetch(`${ORDERS_API}/orders`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
